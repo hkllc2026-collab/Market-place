@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pay by Interac e-Transfer</title>
+<style>
+  :root { --bg:#f4f6f9; --card:#ffffff; --ink:#15202b; --muted:#5b6876; --brand:#1f3a5f; --line:#dbe1e8; --ok:#1a7f4b; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0f151c; --card:#18212b; --ink:#eef2f6; --muted:#9fb0c0; --brand:#7fa6d6; --line:#2a3644; --ok:#4cc38a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; background:var(--bg); color:var(--ink); line-height:1.5; }
+  main { max-width:520px; margin:0 auto; padding:24px 16px 48px; }
+  h1 { font-size:1.5rem; margin:8px 0 4px; color:var(--brand); }
+  p.lead { margin:0 0 20px; color:var(--muted); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:16px; }
+  .label { font-size:.8rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:0 0 6px; }
+  .email { font-size:1.15rem; font-weight:700; word-break:break-all; margin:0 0 14px; }
+  button.copy { width:100%; font:inherit; font-weight:700; padding:14px; border:0; border-radius:10px; background:var(--brand); color:#fff; cursor:pointer; }
+  @media (prefers-color-scheme: dark) { button.copy { color:#0f151c; } }
+  button.copy:focus-visible, a.bank:focus-visible { outline:3px solid var(--ok); outline-offset:2px; }
+  .status { min-height:1.4em; margin:8px 0 0; color:var(--ok); font-weight:600; }
+  ol { margin:0; padding-left:1.2rem; }
+  ol li { margin:8px 0; }
+  .banks { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+  a.bank { display:block; text-align:center; padding:12px 8px; border:1px solid var(--line); border-radius:10px; color:var(--ink); text-decoration:none; font-weight:600; background:var(--card); }
+  a.bank:hover { border-color:var(--brand); }
+  .note { font-size:.85rem; color:var(--muted); margin:8px 0 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Pay by Interac e-Transfer</h1>
+  <p class="lead">Three quick steps. Works with any Canadian bank.</p>
+
+  <section class="card" aria-labelledby="s1">
+    <p class="label" id="s1">Step 1 &middot; Copy the recipient email</p>
+    <p class="email" id="addr">sales.canada07@gmail.com</p>
+    <button class="copy" id="copyBtn" type="button">Copy email address</button>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="card" aria-labelledby="s2">
+    <p class="label" id="s2">Step 2 &middot; Open your banking app</p>
+    <p style="margin:0">Open your bank's app, or tap your bank below to open its website and sign in.</p>
+    <div class="banks">
+      <a class="bank" href="https://www.rbcroyalbank.com/" target="_blank" rel="noopener noreferrer">RBC</a>
+      <a class="bank" href="https://www.td.com/" target="_blank" rel="noopener noreferrer">TD</a>
+      <a class="bank" href="https://www.bmo.com/" target="_blank" rel="noopener noreferrer">BMO</a>
+      <a class="bank" href="https://www.scotiabank.com/" target="_blank" rel="noopener noreferrer">Scotiabank</a>
+      <a class="bank" href="https://www.cibc.com/" target="_blank" rel="noopener noreferrer">CIBC</a>
+    </div>
+    <p class="note">These links go to each bank's official website. Only sign in on your bank's own app or site.</p>
+  </section>
+
+  <section class="card" aria-labelledby="s3">
+    <p class="label" id="s3">Step 3 &middot; Send the money</p>
+    <ol>
+      <li>Choose <strong>Send Interac e-Transfer</strong> (or Send Money).</li>
+      <li>Paste the email address as the recipient.</li>
+      <li>Enter the amount, check the details, then confirm and send.</li>
+    </ol>
+    <p class="note">Before you confirm, check that the recipient email matches exactly: sales.canada07@gmail.com</p>
+  </section>
+</main>
+<script>
+(function () {
+  var btn = document.getElementById('copyBtn');
+  var status = document.getElementById('status');
+  var text = document.getElementById('addr').textContent.trim();
+  function done(msg) { status.textContent = msg; }
+  function fallback() {
+    var r = document.createRange();
+    r.selectNodeContents(document.getElementById('addr'));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    try { done(document.execCommand('copy') ? 'Copied. Now open your banking app.' : 'Email selected. Press and hold to copy.'); }
+    catch (e) { done('Email selected. Press and hold to copy.'); }
+  }
+  btn.addEventListener('click', function () {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done('Copied. Now open your banking app.'); }, fallback);
+    } else { fallback(); }
+  });
+})();
+</script>
+</body>
+</html>
